@@ -10,6 +10,7 @@ namespace fitshop.App_Start
 {
     public static class Auth
     {
+
         public static string GenerateToken()
         {
             byte[] random = new Byte[192];

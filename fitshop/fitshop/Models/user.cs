@@ -17,6 +17,7 @@ namespace fitshop.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public user()
         {
+            this.food = new HashSet<food>();
             this.token = new HashSet<token>();
             this.userRoles = new HashSet<userRoles>();
         }
@@ -27,7 +28,8 @@ namespace fitshop.Models
         public string mail { get; set; }
         public Nullable<int> rolesId { get; set; }
     
-        public virtual food food { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<food> food { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<token> token { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

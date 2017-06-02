@@ -13,7 +13,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-
+using Facebook;
+using fitshop.Providers;
 
 namespace fitshop.Controllers
 {
@@ -23,7 +24,6 @@ namespace fitshop.Controllers
         private fitshopEntities _db;
         private TimeSpan _tokenExpire = TimeSpan.FromDays(1);
 
-
         public AccountController()
         {
             _db = new fitshopEntities();
@@ -32,49 +32,54 @@ namespace fitshop.Controllers
         [AllowAnonymous]
         [Route("Register")]
         [HttpPost]
-        public IHttpActionResult Register()
+        public IHttpActionResult Register(AccountModel user)
         {
-            Dictionary<string, string> body = CustomParser.ParseRequestBody(_getBody());
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            if (!body.Keys.Contains("login") || !body.Keys.Contains("password") || !body.Keys.Contains("confirmPassword") || !body.Keys.Contains("mail"))
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid parameter or parameters"));
-
-            string login = body["login"];
-            string password = Auth.HashPassword(body["password"]);
-            string confirmPassword = Auth.HashPassword(body["confirmPassword"]);
-            string mail = body["mail"];
-
-            List<user> existsLoginOrMail = _db.user.Where(x => x.login == login || x.mail == mail).ToList();
+            List<user> existsLoginOrMail = _db.user.Where(x => x.login == user.Login || x.mail == user.Mail).ToList();
 
             if (existsLoginOrMail.Count > 0)
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Login or Mail exists"));
 
-            if (password != confirmPassword)
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Password and confirm password is not same"));
+            using (DbContextTransaction dbtransaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    user newUser = new user()
+                    {
+                        login = user.Login,
+                        password = Auth.HashPassword(user.Password),
+                        mail = user.Mail
+                    };
+                    _db.user.Add(newUser);
+                    _db.SaveChanges();
 
+                    roles roles = _db.roles.Where(x => x.name == "user").First();
+                    userRoles newUserRoles = new userRoles()
+                    {
+                        userId = newUser.id,
+                        rolesId = roles.id
+                    };
 
+                    _db.userRoles.Add(newUserRoles);
+                    _db.SaveChanges();
 
-            roles roles = _db.roles.Where(x => x.name == "user").First();
+                    newUser.rolesId = newUserRoles.id;
 
-            user newUser = new user() { login = login, mail = mail, password = password };
-            _db.user.Add(newUser);
-            _db.SaveChanges();
+                    _db.user.Attach(newUser);
+                    _db.Entry(newUser).State = EntityState.Modified;
+                    _db.SaveChanges();
 
-            user addedUser = _db.user.Where(x => x.login == login && x.mail == mail).First();
-            userRoles newUserRoles = new userRoles() { userId = addedUser.id, rolesId = roles.id };
+                    dbtransaction.Commit();
+                }
+                catch
+                {
+                    dbtransaction.Rollback();
+                }
 
-            _db.userRoles.Add(newUserRoles);
-            _db.SaveChanges();
-
-            userRoles addedUserRoles = _db.userRoles.Where(x => x.userId == addedUser.id && x.rolesId == roles.id).First();
-            addedUser.rolesId = addedUserRoles.id;
-
-            _db.user.Attach(addedUser);
-            _db.Entry(addedUser).State = EntityState.Modified;
-            _db.SaveChanges();
-
-
-            return Ok();
+                return Ok();
+            }
         }
 
         [CustomAuthorization(Roles = "admin")]
@@ -89,37 +94,30 @@ namespace fitshop.Controllers
             return Ok(JsonObject);
         }
 
-        [CustomAuthorization(Roles = "admin")]
-        [Route("login")]
-        [HttpGet]
-        public IHttpActionResult Login()
-        {
-            return Ok();
-        }
-
         [AllowAnonymous]
         [Route("token")]
         [HttpPost]
-        public IHttpActionResult Token()
+        public IHttpActionResult Token(CreateTokenModel user)
         {
-            string requestBody = _getBody();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            Dictionary<string, string> body = CustomParser.ParseRequestBody(requestBody);
+            string hashedPassword = Auth.HashPassword(user.Password);
 
-            if (!body.Keys.Contains("login") || !body.Keys.Contains("password"))
-                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid parameter or parameters"));
-
-            string login = body["login"];
-            string password = Auth.HashPassword(body["password"]);
-
-            List<user> currentUser = _db.user.Where(x => x.login == login && x.password == password).ToList();
+            List<user> currentUser = _db.user.Where(x => x.login == user.Login && x.password == hashedPassword).ToList();
 
             if (currentUser.Count != 1)
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid login or password"));
 
             string token = Auth.GenerateToken();
 
-            token newToken = new token() { active = true, expire = DateTime.Now + _tokenExpire, tokenValue = token, user = currentUser.First() };
+            token newToken = new token()
+            {
+                active = true,
+                expire = DateTime.Now + _tokenExpire,
+                tokenValue = token,
+                user = currentUser.First()
+            };
             _db.token.Add(newToken);
             _db.SaveChanges();
 
@@ -128,11 +126,57 @@ namespace fitshop.Controllers
             return Ok(JsonObject);
         }
 
-        private string _getBody()
+        [CustomAuthorization(Roles = "admin,user")]
+        [Route("logout")]
+        [HttpGet]
+        public IHttpActionResult Logout()
         {
-            Task<string> content = ActionContext.Request.Content.ReadAsStringAsync();
+            string token = ActionContext.Request.Headers.Authorization.ToString();
 
-            return content.Result;
+            token tokenFormDB = _db.token.Where(x => x.tokenValue == token).ToList().First();
+
+            tokenFormDB.active = false;
+
+            _db.token.Attach(tokenFormDB);
+            _db.Entry(tokenFormDB).State = EntityState.Modified;
+            _db.SaveChanges();
+
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [Route("LoginFB")]
+        [HttpGet]
+        public IHttpActionResult LoginFB()
+        {
+            FacebookProvider fbProvider = new FacebookProvider(null);
+
+            Uri url = fbProvider.GetLoginUrl();
+            
+            return Ok(url);
+        }
+
+        [AllowAnonymous]
+        [Route("FB")]
+        [HttpGet]
+        public IHttpActionResult FB()
+        {
+            string code = HttpContext.Current.Request.Params["code"];
+            FacebookProvider fbProvider = new FacebookProvider(null);
+
+            object token = fbProvider.GetToken(code);
+
+            return Ok(token.ToString());
+        }
+
+        private Uri _redirectUri()
+        {
+            var uriBuilder = new UriBuilder(Request.RequestUri);
+            uriBuilder.Query = null;
+            uriBuilder.Fragment = null;
+            uriBuilder.Path = "api/account/fb";
+
+            return uriBuilder.Uri;
         }
     }
 }

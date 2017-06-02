@@ -37,6 +37,7 @@ namespace fitshop.App_Start
         {
             dynamic jsonObject = new JObject();
 
+            jsonObject.id = user.id;
             jsonObject.login = user.login;
             jsonObject.mail = user.mail;
 
@@ -56,7 +57,9 @@ namespace fitshop.App_Start
         public static dynamic ParseFoodToJson(List<food> foods)
         {
             dynamic jsonObject = new JObject();
+            jsonObject.author = ParseUserToJson(foods.First().user);
             jsonObject.foods = new JArray() as dynamic;
+
             foreach (var food in foods)
                 jsonObject.foods.Add(ParseFoodToJson(food));
 
@@ -67,7 +70,6 @@ namespace fitshop.App_Start
         {
             dynamic jsonObject = new JObject();
 
-            jsonObject.user = ParseUserToJson(food.user);
             jsonObject.foodName = food.foodName;
             jsonObject.protein = food.Protein;
             jsonObject.carbs = food.Carbs;
