@@ -15,6 +15,7 @@ using System.Web;
 using System.Web.Http;
 using Facebook;
 using fitshop.Providers;
+using System.Web.SessionState;
 
 namespace fitshop.Controllers
 {
@@ -23,10 +24,12 @@ namespace fitshop.Controllers
     {
         private fitshopEntities _db;
         private TimeSpan _tokenExpire = TimeSpan.FromDays(1);
+        private Cache _cache;
 
         public AccountController()
         {
             _db = new fitshopEntities();
+            _cache = Cache.GetInstance();
         }
 
         [AllowAnonymous]
@@ -76,6 +79,7 @@ namespace fitshop.Controllers
                 catch
                 {
                     dbtransaction.Rollback();
+                    return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Register user failed!"));
                 }
 
                 return Ok();
@@ -97,7 +101,7 @@ namespace fitshop.Controllers
         [AllowAnonymous]
         [Route("token")]
         [HttpPost]
-        public IHttpActionResult Token(CreateTokenModel user)
+        public IHttpActionResult Token(LoginModel user)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -116,7 +120,8 @@ namespace fitshop.Controllers
                 active = true,
                 expire = DateTime.Now + _tokenExpire,
                 tokenValue = token,
-                user = currentUser.First()
+                user = currentUser.First(),
+                type = 0
             };
             _db.token.Add(newToken);
             _db.SaveChanges();
@@ -133,12 +138,19 @@ namespace fitshop.Controllers
         {
             string token = ActionContext.Request.Headers.Authorization.ToString();
 
-            token tokenFormDB = _db.token.Where(x => x.tokenValue == token).ToList().First();
+            token tokenFromDB = _db.token.Where(x => x.tokenValue == token).First();
 
-            tokenFormDB.active = false;
+            if (tokenFromDB.type == 1)
+            {
+                FacebookProvider fbProvider = new FacebookProvider();
 
-            _db.token.Attach(tokenFormDB);
-            _db.Entry(tokenFormDB).State = EntityState.Modified;
+                Uri url = fbProvider.GetLogoutUrl(tokenFromDB.tokenValue);
+            }
+
+            tokenFromDB.active = false;
+
+            _db.token.Attach(tokenFromDB);
+            _db.Entry(tokenFromDB).State = EntityState.Modified;
             _db.SaveChanges();
 
             return Ok();
@@ -149,34 +161,129 @@ namespace fitshop.Controllers
         [HttpGet]
         public IHttpActionResult LoginFB()
         {
-            FacebookProvider fbProvider = new FacebookProvider(null);
+            FacebookProvider fbProvider = new FacebookProvider();
 
             Uri url = fbProvider.GetLoginUrl();
-            
+
             return Ok(url);
         }
 
         [AllowAnonymous]
-        [Route("FB")]
+        [Route("TokenFB")]
         [HttpGet]
-        public IHttpActionResult FB()
+        public IHttpActionResult TokenFB()
         {
             string code = HttpContext.Current.Request.Params["code"];
-            FacebookProvider fbProvider = new FacebookProvider(null);
+            FacebookProvider fbProvider = new FacebookProvider();
 
-            object token = fbProvider.GetToken(code);
+            dynamic respone = fbProvider.GetToken(code);
 
-            return Ok(token.ToString());
+            string token = respone.access_token;
+            TimeSpan expire = TimeSpan.FromSeconds(Double.Parse(respone.expires_in.ToString()));
+
+            dynamic userDataFB = fbProvider.GetUserData(token);
+            string email = userDataFB.email;
+
+            List<user> users = _db.user.Where(x => x.mailFB == email).ToList();
+
+            token tokenFB = new token()
+            {
+                tokenValue = token,
+                expire = DateTime.Now + expire,
+                type = 1,
+                active = true
+            };
+
+            if (users.Count == 1)
+            {
+                tokenFB.userId = users.First().id;
+
+                _db.token.Add(tokenFB);
+                _db.SaveChanges();
+
+                return Ok();
+            }
+
+            _cache.Add("tokenFB", respone);
+
+            return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Account not connected"));
         }
 
-        private Uri _redirectUri()
+        [AllowAnonymous]
+        [Route("ConnectToFB")]
+        [HttpPost]
+        public IHttpActionResult ConnectToFacebook(LoginModel user)
         {
-            var uriBuilder = new UriBuilder(Request.RequestUri);
-            uriBuilder.Query = null;
-            uriBuilder.Fragment = null;
-            uriBuilder.Path = "api/account/fb";
+            if (!_cache.Contains("tokenFB"))
+                return BadRequest("First login in facebook");
 
-            return uriBuilder.Uri;
+            dynamic tokenFB = _cache["tokenFB"];
+            _cache.Remove("tokenFB");
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            string hashedPassword = Auth.HashPassword(user.Password);
+
+            List<user> users = _db.user.Where(x => x.login == user.Login && x.password == hashedPassword).ToList();
+
+            if (users.Count != 1)
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid login or password"));
+
+            FacebookProvider fbProvider = new FacebookProvider();
+
+            string tokenValue = tokenFB.access_token;
+            TimeSpan expire = TimeSpan.FromSeconds(Double.Parse(tokenFB.expires_in.ToString()));
+
+            dynamic userDataFB = fbProvider.GetUserData(tokenValue);
+            string email = userDataFB.email;
+
+            using (DbContextTransaction dbtransaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    user userFromDB = users.First();
+                    userFromDB.mailFB = email;
+
+                    _db.user.Attach(userFromDB);
+                    _db.Entry(userFromDB).State = EntityState.Modified;
+                    _db.SaveChanges();
+
+                    token newToken = new token()
+                    {
+                        tokenValue = tokenValue,
+                        expire = DateTime.Now + expire,
+                        type = 1,
+                        active = true,
+                        userId = userFromDB.id
+                    };
+
+                    _db.token.Add(newToken);
+                    _db.SaveChanges();
+
+                    dbtransaction.Commit();
+                }
+                catch
+                {
+                    dbtransaction.Rollback();
+                    return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Connected to Facebook failed!"));
+                }
+            }
+            return Ok(tokenFB);
         }
+
+        [CustomAuthorization(Roles = "admin,user")]
+        [Route("LogoutFB")]
+        [HttpGet]
+        public IHttpActionResult LogoutFB()
+        {
+            string token = HttpContext.Current.Request.Params["code"];
+            FacebookProvider fbProvider = new FacebookProvider();
+
+            Uri url = fbProvider.GetLogoutUrl(token);
+
+            return Ok(url);
+        }
+
     }
 }

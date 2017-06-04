@@ -12,10 +12,10 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="userId" Type="int" Nullable="false" />
           <Property Name="foodName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Protein" Type="float" Nullable="false" />
-          <Property Name="Carbs" Type="float" Nullable="false" />
-          <Property Name="Fat" Type="float" Nullable="false" />
-          <Property Name="Calories" Type="float" Nullable="false" />
+          <Property Name="protein" Type="float" Nullable="false" />
+          <Property Name="carbs" Type="float" Nullable="false" />
+          <Property Name="fat" Type="float" Nullable="false" />
+          <Property Name="calories" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="roles">
           <Key>
@@ -31,6 +31,7 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="userId" Type="int" Nullable="false" />
           <Property Name="tokenValue" Type="varchar" MaxLength="512" Nullable="false" />
+          <Property Name="type" Type="int" Nullable="false" />
           <Property Name="expire" Type="datetime" Nullable="false" />
           <Property Name="active" Type="bit" Nullable="false" />
         </EntityType>
@@ -42,6 +43,7 @@
           <Property Name="login" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="password" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="mail" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="mailFB" Type="varchar" MaxLength="50" />
           <Property Name="rolesId" Type="int" />
         </EntityType>
         <EntityType Name="userRoles">
@@ -143,10 +145,10 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="userId" Type="Int32" Nullable="false" />
           <Property Name="foodName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Protein" Type="Double" Nullable="false" />
-          <Property Name="Carbs" Type="Double" Nullable="false" />
-          <Property Name="Fat" Type="Double" Nullable="false" />
-          <Property Name="Calories" Type="Double" Nullable="false" />
+          <Property Name="protein" Type="Double" Nullable="false" />
+          <Property Name="carbs" Type="Double" Nullable="false" />
+          <Property Name="fat" Type="Double" Nullable="false" />
+          <Property Name="calories" Type="Double" Nullable="false" />
           <NavigationProperty Name="user" Relationship="Self.FK_food_user" FromRole="food" ToRole="user" />
         </EntityType>
         <EntityType Name="roles">
@@ -164,6 +166,7 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="userId" Type="Int32" Nullable="false" />
           <Property Name="tokenValue" Type="String" MaxLength="512" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="type" Type="Int32" Nullable="false" />
           <Property Name="expire" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="active" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="user" Relationship="Self.FK_token_user" FromRole="token" ToRole="user" />
@@ -176,6 +179,7 @@
           <Property Name="login" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="password" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="mail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="mailFB" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="rolesId" Type="Int32" />
           <NavigationProperty Name="food" Relationship="Self.FK_food_user" FromRole="user" ToRole="food" />
           <NavigationProperty Name="token" Relationship="Self.FK_token_user" FromRole="user" ToRole="token" />
@@ -282,10 +286,10 @@
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
                 <ScalarProperty Name="foodName" ColumnName="foodName" />
-                <ScalarProperty Name="Protein" ColumnName="Protein" />
-                <ScalarProperty Name="Carbs" ColumnName="Carbs" />
-                <ScalarProperty Name="Fat" ColumnName="Fat" />
-                <ScalarProperty Name="Calories" ColumnName="Calories" />
+                <ScalarProperty Name="protein" ColumnName="protein" />
+                <ScalarProperty Name="carbs" ColumnName="carbs" />
+                <ScalarProperty Name="fat" ColumnName="fat" />
+                <ScalarProperty Name="calories" ColumnName="calories" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -303,6 +307,7 @@
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
                 <ScalarProperty Name="tokenValue" ColumnName="tokenValue" />
+                <ScalarProperty Name="type" ColumnName="type" />
                 <ScalarProperty Name="expire" ColumnName="expire" />
                 <ScalarProperty Name="active" ColumnName="active" />
               </MappingFragment>
@@ -315,6 +320,7 @@
                 <ScalarProperty Name="login" ColumnName="login" />
                 <ScalarProperty Name="password" ColumnName="password" />
                 <ScalarProperty Name="mail" ColumnName="mail" />
+                <ScalarProperty Name="mailFB" ColumnName="mailFB" />
                 <ScalarProperty Name="rolesId" ColumnName="rolesId" />
               </MappingFragment>
             </EntityTypeMapping>

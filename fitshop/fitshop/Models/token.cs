@@ -17,6 +17,7 @@ namespace fitshop.Models
         public int id { get; set; }
         public int userId { get; set; }
         public string tokenValue { get; set; }
+        public int type { get; set; }
         public System.DateTime expire { get; set; }
         public bool active { get; set; }
     

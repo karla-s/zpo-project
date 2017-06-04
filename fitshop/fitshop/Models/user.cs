@@ -26,6 +26,7 @@ namespace fitshop.Models
         public string login { get; set; }
         public string password { get; set; }
         public string mail { get; set; }
+        public string mailFB { get; set; }
         public Nullable<int> rolesId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

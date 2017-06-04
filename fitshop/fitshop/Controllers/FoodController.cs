@@ -1,4 +1,5 @@
 ﻿using fitshop.App_Start;
+using fitshop.App_Start.Generators;
 using fitshop.Models;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 
 namespace fitshop.Controllers
@@ -34,10 +36,10 @@ namespace fitshop.Controllers
             {
                 userId = (int)food.UserId,
                 foodName = food.FoodName,
-                Calories = (int)food.Calories,
-                Carbs = (int)food.Carbs,
-                Fat = (int)food.Fat,
-                Protein = (int)food.Protein
+                calories = (int)food.Calories,
+                carbs = (int)food.Carbs,
+                fat = (int)food.Fat,
+                protein = (int)food.Protein
             };
 
             _db.food.Add(newFood);
@@ -106,6 +108,44 @@ namespace fitshop.Controllers
             dynamic JsonObject = CustomParser.ParseFoodToJson(foods);
 
             return Ok(JsonObject);
+        }
+
+        [CustomAuthorization(Roles = "admin,user")]
+        [Route("Generate/{format}")]
+        [HttpGet]
+        public IHttpActionResult Generate([FromUri]string format)
+        {
+            IGenerate generator = null;
+            byte[] content;
+
+            switch (format)
+            {
+                case "pdf":
+                    {
+                        generator = new GeneratePDF();
+                        break;
+                    }
+                default:
+                    return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Invalid format"));
+
+            }
+
+            List<food> foods = _db.food.ToList();
+            content = generator.Generate(foods);
+
+            string pdfName = "Foods";
+
+            HttpContext.Current.Response.Clear();
+            HttpContext.Current.Response.ContentType = "application/" + format;
+            HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment; filename=" + pdfName + "." + format);
+            HttpContext.Current.Response.ContentType = "application/" + format;
+            HttpContext.Current.Response.Buffer = true;
+            HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            HttpContext.Current.Response.BinaryWrite(content);
+            HttpContext.Current.Response.End();
+            HttpContext.Current.Response.Close();
+
+            return Ok();
         }
     }
 }

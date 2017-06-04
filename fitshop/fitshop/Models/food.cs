@@ -17,10 +17,10 @@ namespace fitshop.Models
         public int id { get; set; }
         public int userId { get; set; }
         public string foodName { get; set; }
-        public double Protein { get; set; }
-        public double Carbs { get; set; }
-        public double Fat { get; set; }
-        public double Calories { get; set; }
+        public double protein { get; set; }
+        public double carbs { get; set; }
+        public double fat { get; set; }
+        public double calories { get; set; }
     
         public virtual user user { get; set; }
     }

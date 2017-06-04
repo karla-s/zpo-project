@@ -9,7 +9,7 @@ namespace fitshop.Models
     public class AccountModel
     {
         [Required]
-        [StringLength(50, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 5)]
         [Display(Name = "login")]
         public string Login { get; set; }
 

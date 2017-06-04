@@ -33,11 +33,11 @@ namespace fitshop.Models
         public static food Update(food foodToUpdate, FoodModel dataToUpdate)
         {
             foodToUpdate.userId = dataToUpdate.UserId ?? foodToUpdate.userId;
-            foodToUpdate.Calories = dataToUpdate.Calories ?? foodToUpdate.Calories;
-            foodToUpdate.Carbs = dataToUpdate.Carbs ?? foodToUpdate.Carbs;
-            foodToUpdate.Fat = dataToUpdate.Fat ?? foodToUpdate.Fat;
+            foodToUpdate.calories = dataToUpdate.Calories ?? foodToUpdate.calories;
+            foodToUpdate.carbs = dataToUpdate.Carbs ?? foodToUpdate.carbs;
+            foodToUpdate.fat = dataToUpdate.Fat ?? foodToUpdate.fat;
             foodToUpdate.foodName = dataToUpdate.FoodName ?? foodToUpdate.foodName;
-            foodToUpdate.Protein = dataToUpdate.Protein ?? foodToUpdate.Protein;
+            foodToUpdate.protein = dataToUpdate.Protein ?? foodToUpdate.protein;
 
             return foodToUpdate;
         }

@@ -71,10 +71,10 @@ namespace fitshop.App_Start
             dynamic jsonObject = new JObject();
 
             jsonObject.foodName = food.foodName;
-            jsonObject.protein = food.Protein;
-            jsonObject.carbs = food.Carbs;
-            jsonObject.fat = food.Fat;
-            jsonObject.calories = food.Calories;
+            jsonObject.protein = food.protein;
+            jsonObject.carbs = food.carbs;
+            jsonObject.fat = food.fat;
+            jsonObject.calories = food.calories;
 
             return jsonObject;
         }
