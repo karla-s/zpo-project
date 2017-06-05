@@ -9,21 +9,6 @@ namespace fitshop.App_Start
 {
     public static class CustomParser
     {
-        public static Dictionary<string, string> ParseRequestBody(string requestBody)
-        {
-            string decodeRequestBody = HttpUtility.UrlDecode(requestBody);
-            Dictionary<string, string> body = new Dictionary<string, string>();
-
-            string[] bodyItems = decodeRequestBody.Split('&');
-            foreach (var item in bodyItems)
-            {
-                string[] keyValue = item.Split('=');
-                body.Add(keyValue.First(), keyValue.Last());
-            }
-
-            return body;
-        }
-
         public static dynamic ParseTokenToJson(string token, double expire)
         {
             dynamic jsonObject = new JObject();
