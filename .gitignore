@@ -129,8 +129,8 @@ publish/
 #*.pubxml
 
 # NuGet Packages Directory
-fitshop/packages/*
-fitshop_client/packages/*
+# fitshop/packages/*
+# fitshop_client/packages/*
 ## TODO: If the tool you use requires repositories.config
 ## uncomment the next line
 !fitshop/packages/repositories.config
