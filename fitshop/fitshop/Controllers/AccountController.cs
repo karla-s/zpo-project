@@ -201,7 +201,7 @@ namespace fitshop.Controllers
                 _db.token.Add(tokenFB);
                 _db.SaveChanges();
 
-                return Ok();
+                return Ok(token);
             }
 
             _cache.Add("tokenFB", respone);

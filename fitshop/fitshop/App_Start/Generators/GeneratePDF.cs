@@ -53,7 +53,6 @@ namespace fitshop.App_Start.Generators
                 document.Close();
                 byte[] bytes = memoryStream.ToArray();
 
-
                 return bytes;
             }
         }

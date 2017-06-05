@@ -9,7 +9,6 @@ namespace fitshop.App_Start.Generators
 {
     interface IGenerate
     {
-
         byte[] Generate(List<food> foods);
     }
 }
