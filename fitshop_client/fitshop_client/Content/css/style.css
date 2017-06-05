@@ -1,0 +1,14 @@
+.header-area {
+    background-color: #000000;
+}
+@import url('css/bootstrap.min.css');
+@import url('css/slick.css');
+@import url('css/slick-theme.css');
+@import url('css/font-awesome.min.css');
+@import url('css/lightbox.min.css');
+@import url('css/animate.min.css');
+@import url('css/slicknav.min.css');
+@import url('css/hover.css');
+@import url('css/main.css');
+@import url('css/responsive.css');
+

@@ -1,0 +1,718 @@
+body {
+    font-family: "Open Sans", sans-serif;
+    overflow-x: hidden;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+li,
+a {
+    margin: 0;
+    padding: 0;
+}
+
+a:focus,
+a:hover {
+    text-decoration: none;
+}
+.header-area {
+    background-color: #000000;
+}
+p {
+    font-size: 15px;
+    color: #484848;
+    margin: 0 0 20px;
+    line-height: 160%;
+}
+
+h3 {
+    color: #D63138;
+    font-size: 22px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+h2 {
+    color: #fff;
+    font-size: 24px;
+    font-style: italic;
+    font-weight: 600;
+    margin-bottom: 10px;
+    padding: 20px 17px;
+    text-transform: uppercase;
+}
+
+.section-padding {
+    padding: 80px 0;
+}
+
+::-webkit-input-placeholder {
+    color: inherit;
+}
+
+.about-us-img::before,
+.client-img::before {
+    background-color: #D63138;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    content: "";
+    left: 0;
+    top: 0;
+    transform: rotate(-20deg);
+}
+
+
+/*- template title part start -*/
+
+.title {
+    margin: 0 0 40px;
+    position: relative;
+}
+
+.title::before {
+    border-bottom: 1px solid #D63138;
+    bottom: 0;
+    content: "";
+    font-size: 90px;
+    height: 50px;
+    position: absolute;
+    right: 0;
+    width: 65%;
+}
+
+.title h1 {
+    color: #000000;
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.title span {
+    color: #D63138;
+}
+
+
+/*- template title part end -*/
+
+
+/*- template button part start -*/
+
+.gym-btn {
+    background-color: #D63138;
+    border: 1px solid #D63138;
+    color: #fff;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 800;
+    padding: 10px 25px;
+    text-transform: uppercase;
+    border-radius: 3px;
+}
+
+.gym-btn:hover {
+    color: #fff;
+}
+
+.gym-btn.join-btn {
+    float: right;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 15px;
+    position: relative;
+    top: 15px;
+}
+
+.none-border {
+    border: 0 !important;
+}
+
+
+/*- template button part end -*/
+
+
+/***** ----- Global part end ----- *****/
+
+
+/***** ----- preloader part start ----- *****/
+
+.preloader-area {
+    background-color: #fff;
+    height: 100%;
+    position: fixed;
+    width: 100%;
+    z-index: 999999;
+}
+
+.preloader {
+    margin: -20px auto 0;
+    position: relative;
+    width: 110px;
+    height: 110px;
+    top: 50%;
+    border-radius: 50%;
+    background-color: rgb(255, 255, 255);
+    border-width: 55px;
+    border-style: double;
+    border-color: transparent rgba(214, 49, 56, 1);
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    animation: preloader 1.6s linear infinite;
+    -webkit-animation: preloader 1.6s linear infinite;
+}
+
+@keyframes preloader {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@-o-keyframes preloader {
+    0% {
+        -o-transform: rotate(0deg);
+    }
+    100% {
+        -o-transform: rotate(360deg);
+    }
+}
+
+@-ms-keyframes preloader {
+    0% {
+        -ms-transform: rotate(0deg);
+    }
+    100% {
+        -ms-transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes preloader {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@-moz-keyframes preloader {
+    0% {
+        -moz-transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(360deg);
+    }
+}
+
+
+/***** ----- preloader part end ----- *****
+/***** ----- Header part start ----- *****/
+
+.header-area {
+    position: fixed;
+    width: 100%;
+    z-index: 99999;
+    padding: 5px 0;
+    top: 0;
+    transition: all 0.5s ease 0s;
+}
+
+.logo img {
+    max-width: 100%;
+    padding: 10px 0;
+}
+
+.menu-bg {
+    background-color: rgba(0, 0, 0, 0.90) !important;
+    border-bottom: 2px solid #D63138;
+    padding: 0 !important;
+}
+
+.menu-part {
+    display: inline-block;
+    text-align: center;
+    width: 90%;
+}
+
+.menu-part ul {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-part ul li {
+    display: inline-block;
+    list-style: outside none none;
+    padding: 20px 0;
+}
+
+.menu-part ul li a {
+    border: 0 none !important;
+    color: #E3E3E3;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 0;
+    text-transform: uppercase;
+    transition: all 1s ease 0s;
+}
+
+.menu-part ul li a:hover {
+    color: #D63138;
+}
+
+.navbar {
+    margin: 0;
+    padding: 0;
+}
+
+.nav.nav-tabs {
+    border: 0;
+}
+
+.nav li a:focus,
+.nav li a:hover {
+    background-color: transparent;
+}
+
+.nav-tabs li.active a,
+.nav-tabs li.active a:focus,
+.nav-tabs li.active a:hover {
+    background-color: transparent;
+    color: #D63138;
+}
+
+.slicknav_menu {
+    display: none;
+}
+
+@media screen and (max-width: 40em) {
+    /* #menu is the original menu */
+    .js #menu {
+        display: none;
+    }
+    .js .slicknav_menu {
+        display: block;
+    }
+}
+
+.separet {
+    color: #D63138;
+    padding: 0 10px;
+}
+
+
+/***** ----- Header part end ----- *****/
+
+
+/***** ----- slider part start ----- *****/
+
+.carousel-inner {
+    height: 650px;
+}
+
+.carousel.slide {
+    background: #000;
+}
+
+.carousel-caption {
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+
+.item::before {
+    background: rgba(0, 0, 0, 0.5);
+    content: "";
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    z-index: 9;
+}
+
+.item img {
+    width: 100%;
+    animation-delay: 0.5s;
+}
+
+.gym-slider {
+    display: table;
+    width: 100%;
+}
+
+.gym-single-slider {
+    display: table-cell;
+    height: 700px;
+    vertical-align: middle;
+    text-transform: uppercase;
+}
+
+.gym-single-slider h1 {
+    font-size: 65px;
+    font-weight: 800;
+    margin-bottom: 5px;
+    animation-delay: 0.5s;
+}
+
+.gym-single-slider span {
+    color: #D63138;
+}
+
+.gym-single-slider h2 {
+    font-size: 50px;
+    font-style: normal;
+    animation-delay: 0.5s;
+}
+
+.gym-single-slider a.gym-btn {
+    animation-delay: 1s;
+}
+
+.transparent-btn {
+    background-color: transparent;
+}
+
+.carousel-indicators li {
+    background-color: #D63138;
+    border: 1px solid #D63138;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.carousel-indicators .active {
+    background-color: #FFF;
+    border: 1px solid #D63138;
+}
+
+.hvr-shutter-in-vertical::before {
+    background-color: #D63138;
+    transform: scaleY(0);
+}
+
+.hvr-shutter-in-vertical:hover::before,
+.hvr-shutter-in-vertical:focus::before,
+.hvr-shutter-in-vertical:active::before {
+    background-color: #D63138;
+    transform: scaleY(1);
+}
+
+.hvr-shutter-out-vertical {
+    background-color: #D63138;
+}
+
+.hvr-shutter-out-vertical::before {
+    background: #000;
+}
+
+
+/***** ----- slider part end ----- *****/
+
+
+/***** ----- Service part start ----- *****/
+
+.single-service {
+    padding: 30px 0;
+    text-align: center;
+    transition: all 0.5s ease 0s;
+    margin-bottom: 20px;
+}
+
+.single-service:hover {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.15), 0 10px 10px rgba(0, 0, 0, 0.12);
+}
+
+.single-icon-img {
+    border: 1px solid #D63138;
+    border-radius: 50%;
+    display: inline-block;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+    width: 150px;
+}
+
+.single-icon-img img {
+    max-width: 100%;
+}
+
+.single-service h3 {
+    margin: 10px 0;
+}
+
+.single-service p {
+    font-size: 14px;
+    font-weight: 300;
+    padding: 0 12px;
+}
+
+
+/***** ----- Service part end ----- *****/
+
+
+/***** ----- About gym part start ----- *****/
+
+.about-gym-area {
+    background: #f1f1f1 url("../images/about-gym-bg.png") no-repeat fixed left center / contain;
+    position: relative;
+}
+
+.about-gym-area .title::before {
+    display: none;
+}
+
+.gym-video {
+    border: 5px solid #d63138;
+    margin-bottom: 40px;
+    padding: 5px;
+}
+
+
+/***** ----- About gym part end ----- *****/
+
+
+/***** ----- Fit yourself part start ----- *****/
+
+.fityourself-area {
+    background: rgba(0, 0, 0, 0) url("../images/fityourself-bg.png") no-repeat 0 0 / cover;
+}
+
+.fityourself-gym-table {
+    display: table;
+    width: 100%;
+}
+
+.fityourself-gym-tablecell {
+    display: table-cell;
+    height: 600px;
+    vertical-align: middle;
+}
+
+.fityourself-gym-tablecell .title::before {
+    display: none !important;
+}
+
+
+/***** ----- Fit yourself part end ----- *****/
+
+
+/***** ----- Footer part start----- *****/
+
+.footer-top-area {
+    background-color: #121212;
+}
+
+.footer-top {
+    overflow: hidden;
+}
+
+.footer-text img {
+    margin-bottom: 35px;
+    max-width: 100%;
+}
+
+.footer-text p {
+    color: #fff;
+    font-weight: 300;
+}
+
+.footer-heading {
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.footer-heading h2::after {
+    background-color: #fff;
+    bottom: 0;
+    content: "";
+    height: 2px;
+    left: 0;
+    position: absolute;
+    width: 50px;
+}
+
+.footer-heading h2 {
+    color: #D63138;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 50px;
+    padding: 0 0 10px;
+    position: relative;
+    text-transform: uppercase;
+}
+
+.footer-overflow {
+    height: 100%;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    transition: 1s;
+    background-color: #D63138;
+}
+
+.sub {
+    float: left;
+    margin-top: 30px;
+    text-align: center;
+    width: 100%;
+}
+
+.sub input {
+    color: #fff;
+    height: 34px;
+    width: 80%;
+    background-color: #D63138;
+    border: 0;
+    padding-left: 15px;
+    outline: none;
+    float: left;
+}
+
+.sub button {
+    background-color: #d63138;
+    border: 0 none;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 25px;
+    height: 35px;
+    width: 18%;
+    float: right;
+}
+
+.sub button i.fa {
+    position: absolute;
+    left: 30%;
+    top: -5px;
+}
+
+
+/*Scroll top part start*/
+
+#scrollUp {
+    background: #d63138 none repeat scroll 0 0;
+    border-radius: 3px;
+    bottom: 40px;
+    font-size: 20px;
+    padding: 5px 0;
+    right: 20px;
+    transition: all 0.5s ease 0s;
+    z-index: 9999 !important;
+}
+
+#scrollUp:hover {
+    background-color: #fff;
+}
+
+#scrollUp:hover .hvr-icon-bob::before {
+    color: #D63138;
+}
+
+.hvr-icon-bob::before {
+    animation-delay: 0s, 0.3s;
+    animation-direction: normal, alternate;
+    animation-duration: 0.3s, 1.5s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1, infinite;
+    animation-name: hvr-icon-bob-float, hvr-icon-bob;
+    animation-timing-function: ease-out, ease-in-out;
+    right: 11px;
+    top: -15px;
+    color: #fff;
+    transition: all 0.5s ease 0s;
+}
+
+
+/*Scroll top part end*/
+
+.fotter-bottom-area {
+    background-color: #000;1
+    position: relative;
+}
+
+.reserve-area {
+    color: #fff;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 20px 0;
+}
+
+.reserve-area span {
+    color: #D63138;
+}
+
+/***** ----- Footer part end ----- *****/
+
+.counter{
+
+    min-height: 500px;
+    /*margin-top: 150px;*/
+    background-color: #e3e3e3;
+}
+.big-title > h1{
+    padding: 40px 0;
+}
+
+.dropdown.dropdown-lg .dropdown-menu {
+    margin-top: -1px;
+    padding: 6px 20px;
+}
+.input-group-btn .btn-group {
+    display: flex !important;
+}
+.btn-group .btn {
+    border-radius: 0;
+    margin-left: -1px;
+}
+.btn-group .btn:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+.btn-group .form-horizontal .btn[type="submit"] {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.form-horizontal .form-group {
+    margin-left: 0;
+    margin-right: 0;
+}
+.form-group .form-control:last-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+@media screen and (min-width: 768px) {
+    #adv-search {
+        width: 500px;
+        margin: 0 auto;
+    }
+    .dropdown.dropdown-lg {
+        position: static !important;
+    }
+    .dropdown.dropdown-lg .dropdown-menu {
+        min-width: 500px;
+    }
+}
+
+
+.food-search{
+    margin-bottom: 40px;
+}
+
+.daily-summary > .col-md-3 > img{
+    max-height: 180px;
+    max-width: 150px;
+}
+button > a{
+    color: #fff;
+}

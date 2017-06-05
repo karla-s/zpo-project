@@ -1,0 +1,187 @@
+﻿
+@{
+    ViewBag.Title = "CounterTable";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <script>
+        $(document).ready(function () {
+            $('#foodTable').DataTable();
+        });
+    </script>
+
+    double cal = 0;
+    double car = 0;
+    double pro = 0;
+    double fat = 0;
+
+    foreach (var food in Model.foods)
+    {
+        cal += Double.Parse(food.calories.ToString());
+        car += Double.Parse(food.carbs.ToString());
+        pro += Double.Parse(food.protein.ToString());
+        fat += Double.Parse(food.fat.ToString());
+    }
+
+    double dailyCal = 2600;
+    double dailyCar = 400;
+    double dailyPro = 1000;
+    double dailyFat = 1200;
+
+    double remCal = dailyCal - cal;
+    double remCar = dailyCar - car;
+    double remPro = dailyPro - pro;
+    double remFat = dailyFat - fat;
+}
+
+<h2>CounterTable</h2>
+
+<div class="header-wrapper" style="background-color: #337ab7; height: 100px;">
+
+</div>
+<div class="counter">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="big-title text-center">
+                    <h1>Food table</h1>
+                </div>
+                <div class="daily-summary-calories">
+                    <script>
+                        $(document).ready(function () {
+                            $('#foodTable').DataTable();
+                        });
+                    </script>
+                    <table id="foodTable" class="table table-striped table-hover table-responsive">
+                        <thead>
+                            <tr>
+                                <th>
+                                    FOOD NAME
+                                </th>
+                                <th>
+                                    PROTEIN
+                                </th>
+                                <th>
+                                    CARBS
+                                </th>
+                                <th>
+                                    FAT
+                                </th>
+                            </tr>
+                        </thead>
+                        @foreach (var food in Model.foods)
+                        {
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @food.foodName
+                                    </td>
+                                    <td>
+                                        @food.protein
+                                    </td>
+                                    <td>
+                                        @food.carbs
+                                    </td>
+                                    <td>
+                                        @food.fat
+                                    </td>
+                                </tr>
+                            </tbody>
+                        }
+                    </table>
+
+                    <iframe src="https://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.onet.pl%2F&width=450&layout=standard&action=like&size=small&show_faces=true&share=true&height=80&appId" width="450" height="80" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+                </div>
+                <div class="col-md-3">
+
+                </div>
+                <div class="col-md-9">
+                    <table class="table table-striped table-hover table-responsive">
+                        <thead>
+                            <tr>
+                                <th>
+
+                                </th>
+                                <th>
+
+                                </th>
+                                <th>
+
+                                </th>
+                                <th>
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="total">
+                                <td>
+                                    <b>TOTAL</b>
+                                </td>
+                                <td>
+                                    @cal
+                                </td>
+                                <td>
+                                    @pro
+                                </td>
+                                <td>
+                                    @car
+                                </td>
+                                <td>
+                                    @fat
+                                </td>
+                            </tr>
+                            <tr class="total">
+                                <td>
+                                    <b>YOUR DAILY GOAL</b>
+                                </td>
+                                <td>
+                                    @dailyCal
+                                </td>
+                                <td>
+                                    @dailyCar
+                                </td>
+                                <td>
+                                    @dailyPro
+                                </td>
+                                <td>
+                                    @dailyFat
+                                </td>
+                            </tr>
+                            <tr class="total">
+                                <td>
+                                    <b>REMAINING</b>
+                                </td>
+                                <td style="color: green;">
+                                    @remCal
+                                </td>
+                                <td style="color: green;">
+                                    @remPro
+                                </td>
+                                <td style="color: green;">
+                                    @remCar
+                                </td>
+                                <td style="color: green;">
+                                    @remFat
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="background-color: #D63138; color: #fff;">
+                                    <b>CALORIES</b>
+                                </td>
+                                <td style="background-color: #D63138; color: #fff;">
+                                    <b>PROTEIN</b>
+                                </td>
+                                <td style="background-color: #D63138; color: #fff;">
+                                    <b>CARBS</b>
+                                </td>
+                                <td style="background-color: #D63138; color: #fff;">
+                                    <b>FAT</b>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
